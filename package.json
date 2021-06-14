@@ -1,0 +1,27 @@
+{
+  "name": "infaq-lazismu-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/fighantalenta_/infaq-lazismu.git"
+  },
+  "author": "Developer (Talenta , Prasertya)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/fighantalenta_/infaq-lazismu/issues"
+  },
+  "homepage": "https://gitlab.com/fighantalenta_/infaq-lazismu#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.13",
+    "nodemon": "^2.0.7"
+  }
+}
