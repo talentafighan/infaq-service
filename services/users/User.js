@@ -18,7 +18,7 @@ module.exports = {
           from: '"Infaq-Service 👻"',
           to: newUser.email,
           subject: "Infaq Service ✔",
-          text: "your account has been registered in Infaq",
+          text: "Your account has been registered in Infaq",
           // html: "<p>For clients that do not support AMP4EMAIL or amp content is not valid</p>",
           // amp: `<!doctype html>
           // <html ⚡4email>
