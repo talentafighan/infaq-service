@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const UserService = require("../../services/users/User");
-const CaseConverter = require("../../services/util/CaseConverter");
 
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const cekEmail = await UserService.ValidateEmail(req.body.email);
     if (!cekEmail) {
@@ -11,7 +10,7 @@ router.post("/", async (req, res) => {
       return;
     }
     const cekMobilePhone = await UserService.ValidatePhoneNumber(
-      req.body.mobilePhoneNumber
+      req.body.mobile_phone_number
     );
     if (!cekMobilePhone) {
       res.status(422).json({ message: "MOBILE PHONE ALREADY EXIST" });
@@ -23,15 +22,17 @@ router.post("/", async (req, res) => {
       return;
     }
     const response = await UserService.PostUserService({
-      user_type: req.body.userType,
+      user_type: req.body.user_type,
       email: req.body.email,
-      mobile_phone_number: req.body.mobilePhoneNumber,
+      mobile_phone_number: req.body.mobile_phone_number,
       password: req.body.password,
       username: req.body.username,
     });
-    console.log(response);
-    const camelResponse = CaseConverter.SnakeToCamel(response);
-    res.status(200).json({ camelResponse });
+    if (response) {
+      res.status(200).json({ register: response });
+    } else {
+      res.status(500).json({ error: "Server Gagal" });
+    }
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -75,15 +76,33 @@ router.delete(`/:user_id`, async (req, res) => {
 router.put(`/:user_id`, async (req, res) => {
   try {
     const data = {
-      user_type: req.body.userType,
+      user_type: req.body.user_type,
       email: req.body.email,
-      mobile_phone_number: req.body.mobilePhoneNumber,
+      mobile_phone_number: req.body.mobile_phone_number,
       password: req.body.password,
       username: req.body.username,
     };
     const upd = await UserService.PutById(req.params.user_id, data);
     if (upd) {
       res.status(200).json({ data: upd });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const Login = await UserService.Login({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      mobile_phone_number: req.body.mobile_phone_number,
+    });
+    if (Login) {
+      res.status(200).json({ Login });
+    } else {
+      res.status(500).json({ message: "USER NOT MATCH" });
     }
   } catch (error) {
     res.status(500).json({ error });

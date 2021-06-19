@@ -1,12 +1,49 @@
 const User = require("../../models/users/User");
+const nodemailer = require("nodemailer");
 
 module.exports = {
   PostUserService(payload) {
     return new Promise(async (resolve, reject) => {
       try {
         const newUser = new User(payload);
-        const response = await newUser.save();
-        resolve(response);
+
+        var transporter = await nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: newUser.email,
+            pass: newUser.password,
+          },
+        });
+        var mailOptions = {
+          from: '"Infaq-Service 👻"',
+          to: newUser.email,
+          subject: "Infaq Service ✔",
+          text: "your account has been registered in Infaq",
+          html: "<p>For clients that do not support AMP4EMAIL or amp content is not valid</p>",
+          amp: `<!doctype html>
+          <html ⚡4email>
+            <head>
+              <meta charset="utf-8">
+              <style amp4email-boilerplate>body{visibility:hidden}</style>
+              <script async src="https://cdn.ampproject.org/v0.js"></script>
+              <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+            </head>
+            <body>
+              <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
+              <p>GIF (requires "amp-anim" script in header):<br/>
+                <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
+            </body>
+          </html>`,
+        };
+        await transporter.sendMail(mailOptions, function (err, info) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("email send success!", info.response);
+            const response = newUser.save();
+            resolve(response);
+          }
+        });
       } catch (error) {
         reject(error);
       }
@@ -58,7 +95,6 @@ module.exports = {
   },
   async ValidateEmail(payload) {
     const chekingEmail = await User.findOne({ email: payload });
-    console.log(chekingEmail);
     if (chekingEmail) {
       return false;
     } else {
@@ -84,5 +120,15 @@ module.exports = {
     } else {
       return true;
     }
+  },
+  Login(payload) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const Login = await User.findOne(payload);
+        resolve(Login);
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
 };
